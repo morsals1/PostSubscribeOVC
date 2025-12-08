@@ -1,0 +1,33 @@
+﻿<Page x:Class="WpfSUB.Pages.ReportPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Отчеты">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Панель инструментов -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+            <Button Content="Назад" Click="Back_Click" Margin="5" Width="80"/>
+            <Button Content="Прайс-лист" Click="PriceList_Click" Margin="5" Width="100"/>
+            <Button Content="Квитанция" Click="Receipt_Click" Margin="5" Width="100"/>
+            <Button Content="Активные подписки" Click="ActiveSubscriptions_Click" Margin="5" Width="180"/>
+            <Button Content="Подписки к оплате" Click="PendingSubscriptions_Click" Margin="5" Width="180"/>
+            <Button Content="Очистить" Click="ClearReport_Click" Margin="5" Width="80"/>
+        </StackPanel>
+
+        <!-- Содержимое отчета -->
+        <Border Grid.Row="1" Margin="10" BorderBrush="#E0E0E0" BorderThickness="1">
+            <ScrollViewer>
+                <StackPanel x:Name="ReportContent" Margin="20">
+                    <TextBlock x:Name="ReportTitle" Text="Отчеты системы" 
+                             FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
+                    <TextBlock x:Name="ReportText" Text="Выберите тип отчета для генерации"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Page>

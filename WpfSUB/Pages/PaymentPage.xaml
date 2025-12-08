@@ -1,0 +1,37 @@
+﻿<Page x:Class="WpfSUB.Pages.PaymentPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Платежи">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Панель инструментов -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+            <Button Content="Назад" Click="Back_Click" Margin="5"/>
+            <Button Content="Добавить платеж" Click="Add_Click" Margin="5"/>
+            <Button Content="Подтвердить" Click="Confirm_Click" Margin="5" x:Name="ConfirmButton"/>
+            <Button Content="Отклонить" Click="Reject_Click" Margin="5" x:Name="RejectButton"/>
+            <Button Content="Обновить" Click="Refresh_Click" Margin="5"/>
+        </StackPanel>
+
+        <!-- Список платежей -->
+        <ListView Grid.Row="1" Margin="10" x:Name="PaymentsListView" SelectionChanged="PaymentsListView_SelectionChanged">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Квитанция" Width="100" DisplayMemberBinding="{Binding ReceiptNumber}"/>
+                    <GridViewColumn Header="Клиент" Width="150" DisplayMemberBinding="{Binding Subscription.Client.FullName}"/>
+                    <GridViewColumn Header="Сумма" Width="80" 
+                                  DisplayMemberBinding="{Binding Amount, StringFormat={}{0:C}}"/>
+                    <GridViewColumn Header="Дата" Width="100" 
+                                  DisplayMemberBinding="{Binding PaymentDate, StringFormat=dd.MM.yyyy}"/>
+                    <GridViewColumn Header="Статус" Width="100" DisplayMemberBinding="{Binding PaymentStatus}"/>
+                    <GridViewColumn Header="Способ" Width="100" DisplayMemberBinding="{Binding PaymentMethod}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Page>

@@ -1,0 +1,108 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\mensh\\Desktop\\WpfSUB\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6546CF4C-8D48-44D3-9224-1ABDC89DD287}|WpfSUB\\WpfSUB.csproj|c:\\users\\mensh\\desktop\\wpfsub\\wpfsub\\services\\subscriptionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6546CF4C-8D48-44D3-9224-1ABDC89DD287}|WpfSUB\\WpfSUB.csproj|solutionrelative:wpfsub\\services\\subscriptionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6546CF4C-8D48-44D3-9224-1ABDC89DD287}|WpfSUB\\WpfSUB.csproj|c:\\users\\mensh\\desktop\\wpfsub\\wpfsub\\pages\\subscriptionformpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6546CF4C-8D48-44D3-9224-1ABDC89DD287}|WpfSUB\\WpfSUB.csproj|solutionrelative:wpfsub\\pages\\subscriptionformpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6546CF4C-8D48-44D3-9224-1ABDC89DD287}|WpfSUB\\WpfSUB.csproj|c:\\users\\mensh\\desktop\\wpfsub\\wpfsub\\pages\\subscriptionpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6546CF4C-8D48-44D3-9224-1ABDC89DD287}|WpfSUB\\WpfSUB.csproj|solutionrelative:wpfsub\\pages\\subscriptionpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6546CF4C-8D48-44D3-9224-1ABDC89DD287}|WpfSUB\\WpfSUB.csproj|c:\\users\\mensh\\desktop\\wpfsub\\wpfsub\\pages\\subscriptionpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{6546CF4C-8D48-44D3-9224-1ABDC89DD287}|WpfSUB\\WpfSUB.csproj|solutionrelative:wpfsub\\pages\\subscriptionpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6546CF4C-8D48-44D3-9224-1ABDC89DD287}|WpfSUB\\WpfSUB.csproj|c:\\users\\mensh\\desktop\\wpfsub\\wpfsub\\pages\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6546CF4C-8D48-44D3-9224-1ABDC89DD287}|WpfSUB\\WpfSUB.csproj|solutionrelative:wpfsub\\pages\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SubscriptionService.cs",
+              "DocumentMoniker": "C:\\Users\\mensh\\Desktop\\WpfSUB\\WpfSUB\\Services\\SubscriptionService.cs",
+              "RelativeDocumentMoniker": "WpfSUB\\Services\\SubscriptionService.cs",
+              "ToolTip": "C:\\Users\\mensh\\Desktop\\WpfSUB\\WpfSUB\\Services\\SubscriptionService.cs",
+              "RelativeToolTip": "WpfSUB\\Services\\SubscriptionService.cs",
+              "ViewState": "AgIAADgAAAAAAAAAAAAuwFoAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-08T16:17:30.573Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SubscriptionFormPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\mensh\\Desktop\\WpfSUB\\WpfSUB\\Pages\\SubscriptionFormPage.xaml.cs",
+              "RelativeDocumentMoniker": "WpfSUB\\Pages\\SubscriptionFormPage.xaml.cs",
+              "ToolTip": "C:\\Users\\mensh\\Desktop\\WpfSUB\\WpfSUB\\Pages\\SubscriptionFormPage.xaml.cs",
+              "RelativeToolTip": "WpfSUB\\Pages\\SubscriptionFormPage.xaml.cs",
+              "ViewState": "AgIAAC4BAAAAAAAAAAAuwEcBAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-08T16:02:12.563Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SubscriptionPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\mensh\\Desktop\\WpfSUB\\WpfSUB\\Pages\\SubscriptionPage.xaml.cs",
+              "RelativeDocumentMoniker": "WpfSUB\\Pages\\SubscriptionPage.xaml.cs",
+              "ToolTip": "C:\\Users\\mensh\\Desktop\\WpfSUB\\WpfSUB\\Pages\\SubscriptionPage.xaml.cs",
+              "RelativeToolTip": "WpfSUB\\Pages\\SubscriptionPage.xaml.cs",
+              "ViewState": "AgIAAHEAAAAAAAAAAAAiwHEAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-08T16:03:14.795Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SubscriptionPage.xaml",
+              "DocumentMoniker": "C:\\Users\\mensh\\Desktop\\WpfSUB\\WpfSUB\\Pages\\SubscriptionPage.xaml",
+              "RelativeDocumentMoniker": "WpfSUB\\Pages\\SubscriptionPage.xaml",
+              "ToolTip": "C:\\Users\\mensh\\Desktop\\WpfSUB\\WpfSUB\\Pages\\SubscriptionPage.xaml",
+              "RelativeToolTip": "WpfSUB\\Pages\\SubscriptionPage.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-12-08T16:03:02.705Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MainPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\mensh\\Desktop\\WpfSUB\\WpfSUB\\Pages\\MainPage.xaml.cs",
+              "RelativeDocumentMoniker": "WpfSUB\\Pages\\MainPage.xaml.cs",
+              "ToolTip": "C:\\Users\\mensh\\Desktop\\WpfSUB\\WpfSUB\\Pages\\MainPage.xaml.cs",
+              "RelativeToolTip": "WpfSUB\\Pages\\MainPage.xaml.cs",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAswCwAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-08T14:56:13.196Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

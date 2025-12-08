@@ -1,0 +1,48 @@
+﻿<Page x:Class="WpfSUB.Pages.ClientFormPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Форма клиента">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" Text="Данные клиента" FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
+
+        <!-- Форма -->
+        <ScrollViewer Grid.Row="1">
+            <StackPanel>
+                <Label Content="ФИО:"/>
+                <TextBox x:Name="FullNameTextBox" Margin="0,0,0,10"/>
+
+                <Label Content="Адрес:"/>
+                <TextBox x:Name="AddressTextBox" Margin="0,0,0,10"/>
+
+                <Label Content="Телефон:"/>
+                <TextBox x:Name="PhoneTextBox" Margin="0,0,0,10"/>
+
+                <Label Content="Email:"/>
+                <TextBox x:Name="EmailTextBox" Margin="0,0,0,10"/>
+
+                <Label Content="Паспортные данные:"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBox x:Name="PassportSeriesTextBox" Width="60" Text="0000" Margin="0,0,5,0"/>
+                    <TextBox x:Name="PassportNumberTextBox" Width="100" Text="000000"/>
+                </StackPanel>
+
+                <Label Content="Кем выдан:"/>
+                <TextBox x:Name="IssuedByTextBox" Margin="0,0,0,10"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Сохранить" Click="Save_Click" Width="100" Margin="5"/>
+            <Button Content="Отмена" Click="Cancel_Click" Width="100" Margin="5"/>
+        </StackPanel>
+    </Grid>
+</Page>

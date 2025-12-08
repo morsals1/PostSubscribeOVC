@@ -1,0 +1,75 @@
+﻿<Page x:Class="WpfSUB.Pages.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Главная">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Шапка -->
+        <Border Grid.Row="0" Background="#1976D2" Padding="20">
+            <TextBlock Text="Система оформления подписки на издания" 
+                     Foreground="White" 
+                     FontSize="24" 
+                     FontWeight="Bold"/>
+        </Border>
+
+        <!-- Меню -->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Кнопки меню -->
+            <WrapPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <!-- Группа клиентов -->
+                <Border BorderBrush="#E0E0E0" BorderThickness="1" Margin="10" Padding="10" Width="200">
+                    <StackPanel>
+                        <TextBlock Text="Клиенты" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <Button Content="Список клиентов" Click="Clients_Click" Margin="0,2" Height="30"/>
+                        <Button Content="Новый клиент" Click="NewClient_Click" Margin="0,2" Height="30"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Группа изданий -->
+                <Border BorderBrush="#E0E0E0" BorderThickness="1" Margin="10" Padding="10" Width="200">
+                    <StackPanel>
+                        <TextBlock Text="Издания" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <Button Content="Список изданий" Click="Publications_Click" Margin="0,2" Height="30"/>
+                        <Button Content="Категории" Click="Categories_Click" Margin="0,2" Height="30"/>
+                        <Button Content="Прайс-лист" Click="PriceList_Click" Margin="0,2" Height="30"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Группа подписок -->
+                <Border BorderBrush="#E0E0E0" BorderThickness="1" Margin="10" Padding="10" Width="200">
+                    <StackPanel>
+                        <TextBlock Text="Подписки" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <Button Content="Список подписок" Click="Subscriptions_Click" Margin="0,2" Height="30"/>
+                        <Button Content="Оформить подписку" Click="NewSubscription_Click" Margin="0,2" Height="30"/>
+                        <Button Content="Платежи" Click="Payments_Click" Margin="0,2" Height="30"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Группа отчетов -->
+                <Border BorderBrush="#E0E0E0" BorderThickness="1" Margin="10" Padding="10" Width="200">
+                    <StackPanel>
+                        <TextBlock Text="Отчеты" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <Button Content="Отчеты" Click="Reports_Click" Margin="0,2" Height="30"/>
+                        <Button Content="Квитанции" Click="Receipts_Click" Margin="0,2" Height="30"/>
+                    </StackPanel>
+                </Border>
+            </WrapPanel>
+
+            <!-- Статус -->
+            <Border Grid.Row="1" Background="#F5F5F5" Padding="10">
+                <TextBlock Text="Федеральная почтовая служба - Отдел подписки" 
+                         HorizontalAlignment="Center"/>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>
