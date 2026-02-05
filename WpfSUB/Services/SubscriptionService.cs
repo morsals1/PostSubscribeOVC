@@ -8,7 +8,6 @@ namespace WpfSUB.Services
     public class SubscriptionService
     {
         private readonly AppDbContext _db = BaseDbService.Instance.Context;
-
         public ObservableCollection<Subscription> Subscriptions { get; set; } = new();
 
         public SubscriptionService()
@@ -29,7 +28,6 @@ namespace WpfSUB.Services
                 .Include(s => s.ServiceLinks)
                 .ThenInclude(ssl => ssl.Service)
                 .ToList();
-
             Subscriptions.Clear();
             foreach (var subscription in subscriptions)
             {
@@ -43,44 +41,35 @@ namespace WpfSUB.Services
             var publication = _db.Publications.Find(publicationId);
             if (publication == null)
                 throw new Exception("Издание не найдено");
-
             if (!publication.IsAvailable)
                 throw new Exception("Издание временно недоступно для подписки");
-
             var subscription = new Subscription
             {
                 ClientId = clientId,
                 PublicationId = publicationId,
                 PeriodMonths = months,
                 MonthlyPrice = publication.MonthlyPrice,
-                TotalPrice = totalPrice, // ← используем переданную сумму
+                TotalPrice = totalPrice,
                 Status = "оформлена",
                 PlannedStartDate = plannedStartDate,
                 IsFullyPaid = false,
                 PaymentDeadline = DateTime.Today.AddDays(10),
                 CreatedDate = DateTime.Now
             };
-
             subscription.CalculateDates();
             subscription.Status = "ожидает_оплаты";
-
             _db.Subscriptions.Add(subscription);
-
             try
             {
                 Commit();
-
-                // Загружаем полные данные для коллекции
                 var subscriptionWithDetails = _db.Subscriptions
                     .Include(s => s.Client)
                     .Include(s => s.Publication)
                     .FirstOrDefault(s => s.Id == subscription.Id);
-
                 if (subscriptionWithDetails != null)
                 {
                     Subscriptions.Add(subscriptionWithDetails);
                 }
-
                 return subscription;
             }
             catch (Exception ex)
@@ -95,16 +84,10 @@ namespace WpfSUB.Services
             var subscription = _db.Subscriptions.Find(subscriptionId);
             if (subscription == null)
                 throw new Exception("Подписка не найдена");
-
             if (subscription.Status != "ожидает_оплаты")
                 throw new Exception("Подписка не ожидает оплаты");
-
-            if (amount != subscription.TotalPrice)
-                throw new Exception($"Требуется полная оплата: {subscription.TotalPrice} руб.");
-
             if (subscription.PaymentDeadline.HasValue && subscription.PaymentDeadline < DateTime.Today)
                 throw new Exception("Срок оплаты истек");
-
             var payment = new Payment
             {
                 SubscriptionId = subscriptionId,
@@ -113,10 +96,8 @@ namespace WpfSUB.Services
                 ReceiptNumber = receiptNumber,
                 PaymentStatus = "ожидает_подтверждения"
             };
-
             _db.Payments.Add(payment);
             Commit();
-
             return payment;
         }
 
@@ -126,28 +107,19 @@ namespace WpfSUB.Services
                 .Include(p => p.Subscription)
                 .ThenInclude(s => s.Publication)
                 .FirstOrDefault(p => p.Id == paymentId);
-
             if (payment == null)
                 throw new Exception("Платеж не найден");
-
             var subscription = payment.Subscription;
-
-            // Подтверждаем платеж
             payment.PaymentStatus = "подтвержден";
             payment.ProcessedDate = DateTime.Now;
             payment.OperatorId = operatorId;
-
-            // Обновляем подписку
             subscription.IsFullyPaid = true;
             subscription.PaidDate = DateTime.Now;
             subscription.Status = "оплачена";
-
-            // Устанавливаем фактические даты
             subscription.ActualStartDate = GetNextFirstOfMonth();
             subscription.ActualEndDate = subscription.ActualStartDate.Value
                 .AddMonths(subscription.PeriodMonths)
                 .AddDays(-1);
-
             Commit();
         }
 
@@ -156,15 +128,10 @@ namespace WpfSUB.Services
             var subscription = _db.Subscriptions.Find(subscriptionId);
             if (subscription == null)
                 throw new Exception("Подписка не найдена");
-
             if (!subscription.CanBeActivated())
                 throw new Exception("Подписка не может быть активирована");
-
             subscription.Status = "активна";
-
-            // Создаем расписание доставок
             ScheduleDeliveries(subscription);
-
             Commit();
         }
 
@@ -179,7 +146,7 @@ namespace WpfSUB.Services
             var publication = subscription.Publication;
             DateTime deliveryDate = subscription.ActualStartDate.Value;
             int issueNumber = 1;
-
+            string periodicity = publication != null ? publication.Periodicity : "ежемесячно";
             while (deliveryDate <= subscription.ActualEndDate)
             {
                 var delivery = new Delivery
@@ -187,21 +154,30 @@ namespace WpfSUB.Services
                     SubscriptionId = subscription.Id,
                     IssueNumber = issueNumber++,
                     IssueDate = deliveryDate,
-                    ExpectedDeliveryDate = deliveryDate.AddDays(2), // +2 дня на доставку
+                    ExpectedDeliveryDate = deliveryDate.AddDays(2),
                     DeliveryStatus = "запланирована"
                 };
-
                 _db.Deliveries.Add(delivery);
-
-                // Следующая доставка в зависимости от периодичности
-                deliveryDate = publication.Periodicity switch
+                if (periodicity == "ежедневно")
                 {
-                    "ежедневно" => deliveryDate.AddDays(1),
-                    "еженедельно" => deliveryDate.AddDays(7),
-                    "ежемесячно" => deliveryDate.AddMonths(1),
-                    "ежеквартально" => deliveryDate.AddMonths(3),
-                    _ => deliveryDate.AddMonths(1)
-                };
+                    deliveryDate = deliveryDate.AddDays(1);
+                }
+                else if (periodicity == "еженедельно")
+                {
+                    deliveryDate = deliveryDate.AddDays(7);
+                }
+                else if (periodicity == "ежемесячно")
+                {
+                    deliveryDate = deliveryDate.AddMonths(1);
+                }
+                else if (periodicity == "ежеквартально")
+                {
+                    deliveryDate = deliveryDate.AddMonths(3);
+                }
+                else
+                {
+                    deliveryDate = deliveryDate.AddMonths(1);
+                }
             }
         }
 
@@ -243,22 +219,19 @@ namespace WpfSUB.Services
                            s.PaymentDeadline < DateTime.Today.AddDays(-3) &&
                            !s.IsFullyPaid)
                 .ToList();
-
             foreach (var subscription in overdueSubscriptions)
             {
                 subscription.Status = "отменена";
             }
-
             if (overdueSubscriptions.Any())
                 Commit();
         }
+
         public void UpdateSubscription(Subscription subscription)
         {
             var existingSubscription = _db.Subscriptions.Find(subscription.Id);
             if (existingSubscription == null)
                 throw new Exception("Подписка не найдена");
-
-            // Обновляем ВСЕ поля
             existingSubscription.ClientId = subscription.ClientId;
             existingSubscription.PublicationId = subscription.PublicationId;
             existingSubscription.PeriodMonths = subscription.PeriodMonths;
@@ -272,15 +245,10 @@ namespace WpfSUB.Services
             existingSubscription.ActualStartDate = subscription.ActualStartDate;
             existingSubscription.ActualEndDate = subscription.ActualEndDate;
             existingSubscription.PaymentDeadline = subscription.PaymentDeadline;
-
-            // Пересчитываем даты если изменился период или дата начала
             existingSubscription.CalculateDates();
-
             try
             {
                 Commit();
-
-                // Обновляем в ObservableCollection
                 var index = Subscriptions.IndexOf(Subscriptions.FirstOrDefault(s => s.Id == subscription.Id));
                 if (index >= 0)
                 {
@@ -304,12 +272,10 @@ namespace WpfSUB.Services
                 .Where(s => s.Status == "активна" &&
                            s.ActualEndDate < DateTime.Today)
                 .ToList();
-
             foreach (var subscription in expiredSubscriptions)
             {
                 subscription.Status = "завершена";
             }
-
             if (expiredSubscriptions.Any())
                 Commit();
         }

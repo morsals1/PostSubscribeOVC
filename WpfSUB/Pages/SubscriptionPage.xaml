@@ -2,33 +2,90 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="Подписки">
-
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Панель инструментов -->
+        <!-- Панель кнопок -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
-            <Button Content="Назад" Click="Back_Click" Margin="5"/>
-            <Button Content="Добавить" Click="Add_Click" Margin="5"/>
-            <Button Content="Редактировать" Click="Edit_Click" Margin="5" x:Name="EditButton"/>
-            <Button Content="Удалить" Click="Delete_Click" Margin="5" x:Name="DeleteButton"/>
-            <Button Content="Обновить" Click="Refresh_Click" Margin="5"/>
+            <Button Content="Назад" Click="Back_Click" Margin="5" Width="80"/>
+            <Button Content="Добавить" Click="Add_Click" Margin="5" Width="80"/>
+            <Button Content="Редактировать" Click="Edit_Click" Margin="5" Width="110" x:Name="EditButton"/>
+            <Button Content="Удалить" Click="Delete_Click" Margin="5" Width="80" x:Name="DeleteButton"/>
+            <Button Content="Обновить" Click="Refresh_Click" Margin="5" Width="80"/>
+            <Button Content="Детали" Click="ViewDetails_Click" Margin="5" Width="80"/>
         </StackPanel>
 
+        <!-- Панель фильтров -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0,10,10">
+            <TextBlock Text="Фильтр по статусу:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <ComboBox x:Name="StatusFilterComboBox" Width="150" Height="25" SelectionChanged="StatusFilterComboBox_SelectionChanged">
+                <ComboBoxItem Content="Все" Tag=""/>
+                <ComboBoxItem Content="Ожидают оплаты" Tag="ожидает_оплаты"/>
+                <ComboBoxItem Content="Оплачены" Tag="оплачена"/>
+                <ComboBoxItem Content="Активные" Tag="активна"/>
+                <ComboBoxItem Content="Завершены" Tag="завершена"/>
+            </ComboBox>
+
+            <!-- Поле поиска -->
+            <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="20,0,5,0"/>
+            <TextBox x:Name="SearchTextBox" Width="200" VerticalAlignment="Center" 
+                     KeyUp="SearchTextBox_KeyUp"
+                     TextChanged="SearchTextBox_TextChanged"
+                     Margin="0,0,5,0"/>
+            <Button Content="Очистить" Click="ClearSearch_Click" Width="80" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Статистика -->
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10" Margin="10,0,10,10">
+            <TextBlock x:Name="StatsTextBlock" Text="" TextWrapping="Wrap"/>
+        </Border>
+
+        <!-- Результаты поиска -->
+        <Border Grid.Row="3" Background="#FFF0F0" Padding="5" Margin="10,0,10,5" 
+                Visibility="Collapsed" x:Name="SearchResultsBorder">
+            <TextBlock x:Name="SearchResultsText" Text="" TextWrapping="Wrap"/>
+        </Border>
+
         <!-- Список подписок -->
-        <ListView Grid.Row="1" Margin="10" x:Name="SubscriptionsListView" SelectionChanged="SubscriptionsListView_SelectionChanged">
+        <ListView Grid.Row="4" Margin="10" x:Name="SubscriptionsListView" 
+                  SelectionChanged="SubscriptionsListView_SelectionChanged">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="ID" Width="50" DisplayMemberBinding="{Binding Id}"/>
-                    <GridViewColumn Header="Клиент" Width="150" DisplayMemberBinding="{Binding Client.FullName}"/>
-                    <GridViewColumn Header="Издание" Width="150" DisplayMemberBinding="{Binding Publication.Title}"/>
-                    <GridViewColumn Header="Период" Width="80" DisplayMemberBinding="{Binding PeriodMonths, StringFormat={}{0} мес.}"/>
-                    <GridViewColumn Header="Сумма" Width="100" 
+                    <GridViewColumn Header="ID" Width="40" DisplayMemberBinding="{Binding Id}"/>
+                    <GridViewColumn Header="Клиент" Width="140">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Client.FullName}" TextWrapping="Wrap" MaxWidth="140"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Издание" Width="140">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Publication.Title}" TextWrapping="Wrap" MaxWidth="140"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Период" Width="70" 
+                                  DisplayMemberBinding="{Binding PeriodMonths, StringFormat={}{0} мес.}"/>
+                    <GridViewColumn Header="Сумма" Width="90" 
                                   DisplayMemberBinding="{Binding TotalPrice, StringFormat={}{0:C}}"/>
-                    <GridViewColumn Header="Статус" Width="100" DisplayMemberBinding="{Binding Status}"/>
+                    <GridViewColumn Header="Статус" Width="90" DisplayMemberBinding="{Binding Status}"/>
+                    <GridViewColumn Header="Дата оформления" Width="110" 
+                                  DisplayMemberBinding="{Binding CreatedDate, StringFormat=dd.MM.yyyy}"/>
+                    <GridViewColumn Header="Оплачено" Width="70">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsFullyPaid}" IsEnabled="False"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

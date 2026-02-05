@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using WpfSUB.Services;
 
 namespace WpfSUB.Pages
 {
@@ -10,6 +11,34 @@ namespace WpfSUB.Pages
             InitializeComponent();
         }
 
+        private void MainPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Проверяем авторизацию
+            if (!SessionService.IsLoggedIn)
+            {
+                MessageBox.Show("Требуется авторизация", "Ошибка доступа",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                NavigationService.Navigate(new LoginPage());
+                return;
+            }
+
+            // Обновляем отображение имени оператора
+            CurrentOperatorText.Text = SessionService.OperatorFullName;
+        }
+
+        private void Logout_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show("Вы уверены, что хотите выйти из системы?",
+                "Подтверждение выхода", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                SessionService.Logout();
+                NavigationService.Navigate(new LoginPage());
+            }
+        }
+
+        // Остальные обработчики событий остаются без изменений
         private void Clients_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new ClientPage());
@@ -32,7 +61,7 @@ namespace WpfSUB.Pages
 
         private void PriceList_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new ReportPage("pricelist"));
+            NavigationService.Navigate(new ReportPage());
         }
 
         private void Subscriptions_Click(object sender, RoutedEventArgs e)
@@ -53,11 +82,6 @@ namespace WpfSUB.Pages
         private void Reports_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new ReportPage());
-        }
-
-        private void Receipts_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new ReportPage("receipts"));
         }
     }
 }

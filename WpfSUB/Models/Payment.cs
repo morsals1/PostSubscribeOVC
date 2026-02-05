@@ -100,6 +100,7 @@ namespace WpfSUB.Models
         {
             PaymentDate = DateTime.Now;
             PaymentStatus = "ожидает_подтверждения";
+            BankTransactionId = string.Empty;
         }
     }
 }

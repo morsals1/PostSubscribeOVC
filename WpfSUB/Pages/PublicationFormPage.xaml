@@ -1,0 +1,67 @@
+﻿<Page x:Class="WpfSUB.Pages.PublicationFormPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Новое издание">
+    <ScrollViewer>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Форма издания" 
+                       FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
+            <StackPanel Grid.Row="1">
+                <Label>Название издания:</Label>
+                <TextBox x:Name="TitleTextBox" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" 
+                         Margin="0,0,0,10"/>
+                <Label>Категория:</Label>
+                <ComboBox x:Name="CategoryComboBox" DisplayMemberPath="Name" 
+                          Margin="0,0,0,10"/>
+                <Label>Издатель:</Label>
+                <TextBox x:Name="PublisherTextBox" Text="{Binding Publisher, UpdateSourceTrigger=PropertyChanged}" 
+                         Margin="0,0,0,10"/>
+                <Label>ISSN:</Label>
+                <TextBox x:Name="ISSNTextBox" Text="{Binding ISSN, UpdateSourceTrigger=PropertyChanged}" 
+                         Margin="0,0,0,10"/>
+                <Button Content="Сгенерировать ISSN" Click="GenerateISSN_Click" 
+                        HorizontalAlignment="Left" Margin="0,0,0,10" Width="150"/>
+                <Label>Периодичность:</Label>
+                <ComboBox x:Name="PeriodicityComboBox" Margin="0,0,0,10">
+                    <ComboBoxItem Content="ежедневно"/>
+                    <ComboBoxItem Content="еженедельно"/>
+                    <ComboBoxItem Content="ежемесячно"/>
+                    <ComboBoxItem Content="ежеквартально"/>
+                </ComboBox>
+                <Label>Цена за месяц (руб.):</Label>
+                <TextBox x:Name="MonthlyPriceTextBox" Text="{Binding MonthlyPrice, UpdateSourceTrigger=PropertyChanged}" 
+                         Margin="0,0,0,10"/>
+                <Label>Цена за квартал (руб.):</Label>
+                <TextBox x:Name="QuarterlyPriceTextBox" Text="{Binding QuarterlyPrice, UpdateSourceTrigger=PropertyChanged}" 
+                         Margin="0,0,0,10"/>
+                <Label>Цена за год (руб.):</Label>
+                <TextBox x:Name="YearlyPriceTextBox" Text="{Binding YearlyPrice, UpdateSourceTrigger=PropertyChanged}" 
+                         Margin="0,0,0,10"/>
+                <Button Content="Рассчитать цены" Click="CalculatePrices_Click" 
+                        HorizontalAlignment="Left" Margin="0,0,0,10" Width="150"/>
+                <Label>Описание:</Label>
+                <TextBox x:Name="DescriptionTextBox" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" 
+                         Height="80" TextWrapping="Wrap" AcceptsReturn="True" 
+                         Margin="0,0,0,10"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <Label>Дата начала действия цен:</Label>
+                    <DatePicker x:Name="PriceValidFromDatePicker" Width="120" 
+                                Margin="10,0,0,0"/>
+                    <Label Margin="20,0,0,0">Дата окончания:</Label>
+                    <DatePicker x:Name="PriceValidToDatePicker" Width="120" 
+                                Margin="10,0,0,0"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="SaveButton" Content="Сохранить" Click="Save_Click" 
+                        Width="100" Margin="5" FontWeight="Bold"/>
+                <Button Content="Отмена" Click="Cancel_Click" Width="100" Margin="5"/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>

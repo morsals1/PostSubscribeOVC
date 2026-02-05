@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using WpfSUB.Data;
 using WpfSUB.Models;
+using WpfSUB.Data;
 using WpfSUB.Services;
 
 namespace WpfSUB.Pages
@@ -15,11 +15,13 @@ namespace WpfSUB.Pages
         private Subscription _editingSubscription;
         private bool _isEditMode = false;
         private AppDbContext _context;
+        private Client _selectedClient;
+        private Publication _selectedPublication;
 
         public SubscriptionFormPage()
         {
             InitializeComponent();
-            _context = new AppDbContext();  // ← СОЗДАЕМ КОНТЕКСТ
+            _context = new AppDbContext();
             _subscriptionService = new SubscriptionService();
             LoadData();
         }
@@ -29,12 +31,12 @@ namespace WpfSUB.Pages
         {
             _editingSubscription = subscription;
             _isEditMode = true;
-            
+
             // Заполняем форму данными редактируемой подписки
             if (_editingSubscription != null)
             {
                 Title = "Редактирование подписки";
-                
+
                 // Находим и выбираем клиента
                 if (ClientComboBox.ItemsSource is System.Collections.IList clients)
                 {
@@ -43,11 +45,12 @@ namespace WpfSUB.Pages
                         if (client.Id == _editingSubscription.ClientId)
                         {
                             ClientComboBox.SelectedItem = client;
+                            _selectedClient = client;
                             break;
                         }
                     }
                 }
-                
+
                 // Находим и выбираем издание
                 if (PublicationComboBox.ItemsSource is System.Collections.IList publications)
                 {
@@ -56,28 +59,48 @@ namespace WpfSUB.Pages
                         if (publication.Id == _editingSubscription.PublicationId)
                         {
                             PublicationComboBox.SelectedItem = publication;
+                            _selectedPublication = publication;
                             break;
                         }
                     }
                 }
-                
+
                 // Выбираем период
                 foreach (ComboBoxItem item in PeriodComboBox.Items)
                 {
-                    if (int.TryParse(item.Content.ToString(), out int months) && 
+                    if (int.TryParse(item.Content.ToString(), out int months) &&
                         months == _editingSubscription.PeriodMonths)
                     {
                         PeriodComboBox.SelectedItem = item;
                         break;
                     }
                 }
-                
+
                 // Устанавливаем дату
-                StartDatePicker.SelectedDate = _editingSubscription.PlannedStartDate ?? 
+                StartDatePicker.SelectedDate = _editingSubscription.PlannedStartDate ??
                                               DateTime.Today.AddMonths(1);
-                
+
                 // Рассчитываем стоимость
                 CalculateTotal();
+
+                // Обновляем информацию
+                UpdateSubscriptionInfo();
+            }
+        }
+
+        public void SetClient(Client client)
+        {
+            if (ClientComboBox.ItemsSource is System.Collections.IList clients)
+            {
+                foreach (Client c in clients)
+                {
+                    if (c.Id == client.Id)
+                    {
+                        ClientComboBox.SelectedItem = c;
+                        _selectedClient = c;
+                        break;
+                    }
+                }
             }
         }
 
@@ -86,11 +109,14 @@ namespace WpfSUB.Pages
             try
             {
                 // Загружаем клиентов
-                var clients = _context.Clients.OrderBy(c => c.FullName).ToList();
+                var clients = _context.Clients
+                    .OrderBy(c => c.FullName)
+                    .ToList();
                 ClientComboBox.ItemsSource = clients;
 
                 // Загружаем издания
                 var publications = _context.Publications
+                    .Include(p => p.Category)
                     .Where(p => p.IsAvailable || _isEditMode)
                     .OrderBy(p => p.Title)
                     .ToList();
@@ -98,35 +124,39 @@ namespace WpfSUB.Pages
 
                 // Загружаем услуги
                 var services = _context.AdditionalServices
-                        .Where(s => s.IsActive || _isEditMode)
-                        .ToList();
+                    .Where(s => s.IsActive || _isEditMode)
+                    .OrderBy(s => s.Name)
+                    .ToList();
 
-                    ServicesPanel.Children.Clear();
-                    foreach (var service in services)
+                ServicesPanel.Children.Clear();
+                foreach (var service in services)
+                {
+                    var checkBox = new CheckBox
                     {
-                        var checkBox = new CheckBox
-                        {
-                            Content = $"{service.Name} ({service.Price:C})",
-                            Tag = service,
-                            Margin = new Thickness(0, 2, 0, 2)
-                        };
-                        checkBox.Checked += Service_CheckedChanged;
-                        checkBox.Unchecked += Service_CheckedChanged;
-                        ServicesPanel.Children.Add(checkBox);
-                    }
-                    
-                    if (!_isEditMode)
-                    {
-                        if (clients.Any()) ClientComboBox.SelectedIndex = 0;
-                        if (publications.Any()) PublicationComboBox.SelectedIndex = 0;
-                        
-                        // Устанавливаем дату начала на следующий месяц
-                        StartDatePicker.SelectedDate = DateTime.Today.AddMonths(1);
-                    }
+                        Content = $"{service.Name} ({service.Price:C})",
+                        Tag = service,
+                        Margin = new Thickness(0, 2, 0, 2)
+                    };
+                    checkBox.Checked += Service_CheckedChanged;
+                    checkBox.Unchecked += Service_CheckedChanged;
+                    ServicesPanel.Children.Add(checkBox);
+                }
+
+                if (!_isEditMode)
+                {
+                    if (clients.Any()) ClientComboBox.SelectedIndex = 0;
+                    if (publications.Any()) PublicationComboBox.SelectedIndex = 0;
+                    PeriodComboBox.SelectedIndex = 2; // 12 месяцев по умолчанию
+
+                    // Устанавливаем дату начала на следующий месяц
+                    StartDatePicker.SelectedDate = DateTime.Today.AddMonths(1);
+                }
+
+                CalculateTotal();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", 
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}",
                     "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -161,16 +191,39 @@ namespace WpfSUB.Pages
                     }
 
                     TotalPriceText.Text = $"{total:C}";
+                    UpdateSubscriptionInfo();
                 }
                 else
                 {
                     TotalPriceText.Text = "0,00 ₽";
+                    SubscriptionInfoText.Text = "";
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка расчета: {ex.Message}", 
+                MessageBox.Show($"Ошибка расчета: {ex.Message}",
                     "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void UpdateSubscriptionInfo()
+        {
+            if (_selectedClient != null && _selectedPublication != null &&
+                PeriodComboBox.SelectedItem is ComboBoxItem periodItem &&
+                int.TryParse(periodItem.Content.ToString(), out int months))
+            {
+                string info = $"Клиент: {_selectedClient.FullName}\n" +
+                            $"Издание: {_selectedPublication.Title}\n" +
+                            $"Период: {months} месяцев\n" +
+                            $"Дата начала: {StartDatePicker.SelectedDate:dd.MM.yyyy}\n" +
+                            $"Примерная дата окончания: {StartDatePicker.SelectedDate?.AddMonths(months).AddDays(-1):dd.MM.yyyy}\n" +
+                            $"Стоимость: {TotalPriceText.Text}";
+
+                SubscriptionInfoText.Text = info;
+            }
+            else
+            {
+                SubscriptionInfoText.Text = "Заполните все поля для просмотра информации";
             }
         }
 
@@ -180,14 +233,14 @@ namespace WpfSUB.Pages
             {
                 if (ClientComboBox.SelectedItem == null)
                 {
-                    MessageBox.Show("Выберите клиента", "Ошибка", 
+                    MessageBox.Show("Выберите клиента", "Ошибка",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
                 if (PublicationComboBox.SelectedItem == null)
                 {
-                    MessageBox.Show("Выберите издание", "Ошибка", 
+                    MessageBox.Show("Выберите издание", "Ошибка",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
@@ -196,7 +249,7 @@ namespace WpfSUB.Pages
                     !int.TryParse(periodItem.Content.ToString(), out int months) ||
                     months <= 0)
                 {
-                    MessageBox.Show("Выберите корректный период", "Ошибка", 
+                    MessageBox.Show("Выберите корректный период", "Ошибка",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
@@ -205,50 +258,34 @@ namespace WpfSUB.Pages
                 var publication = (Publication)PublicationComboBox.SelectedItem;
                 var startDate = StartDatePicker.SelectedDate ?? DateTime.Today.AddMonths(1);
 
+                if (startDate < DateTime.Today)
+                {
+                    MessageBox.Show("Дата начала не может быть в прошлом", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Рассчитываем общую сумму
+                decimal totalPrice = CalculateTotalPrice();
+
                 if (_isEditMode && _editingSubscription != null)
                 {
-                    // Обновляем существующую подписку через сервис
-                    UpdateSubscription(client, publication, months, startDate);
+                    // Обновляем существующую подписку
+                    UpdateSubscription(client, publication, months, startDate, totalPrice);
                 }
                 else
                 {
-                    // Создаем новую подписку через сервис
-                    CreateNewSubscription(client, publication, months, startDate);
+                    // Создаем новую подписку
+                    CreateNewSubscription(client, publication, months, startDate, totalPrice);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка: {ex.Message}", 
+                MessageBox.Show($"Ошибка: {ex.Message}",
                     "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void CreateNewSubscription(Client client, Publication publication, int months, DateTime startDate)
-        {
-            // 1. Рассчитываем ОБЩУЮ сумму (публикация + услуги)
-            decimal totalPrice = CalculateTotalPrice(); // ← новый метод
-
-            // 2. Создаем подписку с ПРАВИЛЬНОЙ суммой
-            var subscription = _subscriptionService.CreateSubscription(
-                client.Id,
-                publication.Id,
-                months,
-                startDate,
-                totalPrice); // ← передаем общую сумму
-
-            // 3. Добавляем услуги
-            AddServicesToSubscription(subscription.Id, startDate, months);
-
-            MessageBox.Show($"Подписка оформлена успешно!\n" +
-                           $"ID: {subscription.Id}\n" +
-                           $"Сумма: {subscription.TotalPrice:C}\n" +
-                           $"Из них услуги: {CalculateServicesTotal():C}",
-                "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            NavigationService.Navigate(new SubscriptionPage());
-        }
-
-        // Добавьте эти вспомогательные методы в класс:
         private decimal CalculateTotalPrice()
         {
             if (PublicationComboBox.SelectedItem is Publication publication &&
@@ -271,20 +308,29 @@ namespace WpfSUB.Pages
             return 0;
         }
 
-        private decimal CalculateServicesTotal()
+        private void CreateNewSubscription(Client client, Publication publication, int months, DateTime startDate, decimal totalPrice)
         {
-            decimal total = 0;
-            foreach (CheckBox checkBox in ServicesPanel.Children)
-            {
-                if (checkBox.IsChecked == true && checkBox.Tag is AdditionalService service)
-                {
-                    total += service.Price;
-                }
-            }
-            return total;
+            // Создаем подписку
+            var subscription = _subscriptionService.CreateSubscription(
+                client.Id,
+                publication.Id,
+                months,
+                startDate,
+                totalPrice);
+
+            // Добавляем услуги
+            AddServicesToSubscription(subscription.Id, startDate, months);
+
+            MessageBox.Show($"Подписка оформлена успешно!\n" +
+                           $"ID: {subscription.Id}\n" +
+                           $"Сумма: {subscription.TotalPrice:C}\n" +
+                           $"Срок оплаты: {subscription.PaymentDeadline:dd.MM.yyyy}",
+                "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            NavigationService.Navigate(new SubscriptionPage());
         }
 
-        private void UpdateSubscription(Client client, Publication publication, int months, DateTime startDate)
+        private void UpdateSubscription(Client client, Publication publication, int months, DateTime startDate, decimal totalPrice)
         {
             // Получаем полные данные подписки из базы через сервис
             var fullSubscription = _subscriptionService.Subscriptions
@@ -293,27 +339,16 @@ namespace WpfSUB.Pages
             if (fullSubscription == null)
                 throw new Exception("Подписка не найдена в базе данных");
 
-            // Рассчитываем ОБЩУЮ сумму (публикация + услуги)
-            decimal totalPrice = CalculateTotalPrice(); // ← используем тот же метод
-
             // Обновляем поля
             fullSubscription.ClientId = client.Id;
             fullSubscription.PublicationId = publication.Id;
             fullSubscription.PeriodMonths = months;
             fullSubscription.MonthlyPrice = publication.MonthlyPrice;
-            fullSubscription.TotalPrice = totalPrice; // ← устанавливаем ОБЩУЮ сумму
+            fullSubscription.TotalPrice = totalPrice;
             fullSubscription.PlannedStartDate = startDate;
 
             // Пересчитываем даты
             fullSubscription.CalculateDates();
-
-            // Сохраняем статус и другие поля
-            fullSubscription.Status = _editingSubscription.Status;
-            fullSubscription.IsFullyPaid = _editingSubscription.IsFullyPaid;
-            fullSubscription.PaidDate = _editingSubscription.PaidDate;
-            fullSubscription.ActualStartDate = _editingSubscription.ActualStartDate;
-            fullSubscription.ActualEndDate = _editingSubscription.ActualEndDate;
-            fullSubscription.PaymentDeadline = _editingSubscription.PaymentDeadline;
 
             // Обновляем через сервис
             _subscriptionService.UpdateSubscription(fullSubscription);
@@ -329,7 +364,6 @@ namespace WpfSUB.Pages
 
         private void AddServicesToSubscription(int subscriptionId, DateTime startDate, int months)
         {
-            // Теперь используем общий контекст _context
             foreach (CheckBox checkBox in ServicesPanel.Children)
             {
                 if (checkBox.IsChecked == true && checkBox.Tag is AdditionalService service)
@@ -365,12 +399,24 @@ namespace WpfSUB.Pages
             NavigationService.GoBack();
         }
 
+        private void ClientComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _selectedClient = ClientComboBox.SelectedItem as Client;
+            CalculateTotal();
+        }
+
         private void PublicationComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            _selectedPublication = PublicationComboBox.SelectedItem as Publication;
             CalculateTotal();
         }
 
         private void PeriodComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CalculateTotal();
+        }
+
+        private void StartDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             CalculateTotal();
         }

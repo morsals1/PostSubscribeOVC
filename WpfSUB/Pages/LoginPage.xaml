@@ -1,0 +1,194 @@
+﻿<Page x:Class="WpfSUB.Pages.LoginPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Вход в систему">
+
+    <Grid Background="#1976D2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <Border Grid.Row="0" Background="#1565C0" Padding="20">
+            <StackPanel>
+                <TextBlock Text="Федеральная почтовая служба" 
+                         Foreground="White" 
+                         FontSize="16" 
+                         FontWeight="SemiBold"
+                         HorizontalAlignment="Center"/>
+                <TextBlock Text="Отдел оформления подписки" 
+                         Foreground="White" 
+                         FontSize="22" 
+                         FontWeight="Bold"
+                         HorizontalAlignment="Center"
+                         Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Форма входа -->
+        <Border Grid.Row="1" Background="White" 
+                CornerRadius="20,20,0,0" 
+                Margin="0,20,0,0">
+
+            <Grid Margin="30">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Заголовок формы -->
+                <StackPanel Grid.Row="0" Margin="0,0,0,30">
+                    <TextBlock Text="Вход для операторов" 
+                             FontSize="24" 
+                             FontWeight="Bold"
+                             Foreground="#333333"/>
+                    <TextBlock Text="Используйте учетные данные оператора" 
+                             Foreground="#666666"
+                             Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <!-- Поле логина -->
+                <StackPanel Grid.Row="1" Margin="0,0,0,20">
+                    <TextBlock Text="Логин оператора" 
+                             FontWeight="SemiBold"
+                             Foreground="#444444"
+                             Margin="0,0,0,5"/>
+                    <TextBox x:Name="LoginTextBox" 
+                           Height="50"
+                           FontSize="16"
+                           Padding="10"
+                           BorderBrush="#DDDDDD"
+                           BorderThickness="1"
+                           GotFocus="TextBox_GotFocus"
+                           LostFocus="TextBox_LostFocus">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Setter Property="Background" Value="White"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsFocused" Value="True">
+                                        <Setter Property="BorderBrush" Value="#1976D2"/>
+                                        <Setter Property="BorderThickness" Value="2"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                </StackPanel>
+
+                <!-- Поле пароля -->
+                <StackPanel Grid.Row="2" Margin="0,0,0,30">
+                    <TextBlock Text="Пароль" 
+                             FontWeight="SemiBold"
+                             Foreground="#444444"
+                             Margin="0,0,0,5"/>
+                    <PasswordBox x:Name="PasswordBox" 
+                               Height="50"
+                               FontSize="16"
+                               Padding="10"
+                               PasswordChanged="PasswordBox_PasswordChanged"
+                               GotFocus="PasswordBox_GotFocus"
+                               LostFocus="PasswordBox_LostFocus">
+                        <PasswordBox.Style>
+                            <Style TargetType="PasswordBox">
+                                <Setter Property="Background" Value="White"/>
+                                <Setter Property="BorderBrush" Value="#DDDDDD"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsFocused" Value="True">
+                                        <Setter Property="BorderBrush" Value="#1976D2"/>
+                                        <Setter Property="BorderThickness" Value="2"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </PasswordBox.Style>
+                    </PasswordBox>
+                </StackPanel>
+
+                <!-- Кнопка входа -->
+                <Button Grid.Row="3" 
+                      x:Name="LoginButton"
+                      Content="Войти в систему"
+                      Height="45"
+                      Background="#1976D2"
+                      Foreground="White"
+                      FontSize="16"
+                      FontWeight="SemiBold"
+                      BorderThickness="0"
+                      Cursor="Hand"
+                      Click="LoginButton_Click"
+                      IsEnabled="False">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" 
+                                              CornerRadius="5">
+                                            <ContentPresenter HorizontalAlignment="Center" 
+                                                            VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#1565C0"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="#0D47A1"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Background" Value="#CCCCCC"/>
+                                    <Setter Property="Foreground" Value="#888888"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- Сообщение об ошибке -->
+                <Border Grid.Row="4" 
+                      x:Name="ErrorBorder"
+                      Background="#FFEBEE"
+                      BorderBrush="#F44336"
+                      BorderThickness="1"
+                      CornerRadius="5"
+                      Margin="0,15,0,0"
+                      Padding="10"
+                      Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="!" 
+                                 Foreground="#F44336"
+                                 FontWeight="Bold"
+                                 FontSize="16"
+                                 VerticalAlignment="Top"
+                                 Margin="0,0,10,0"/>
+                        <TextBlock x:Name="ErrorMessageText" 
+                                 Foreground="#D32F2F"
+                                 TextWrapping="Wrap"
+                                 VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Информация о системе -->
+                <StackPanel Grid.Row="5" VerticalAlignment="Bottom">
+                    <Separator Background="#EEEEEE" Margin="0,0,0,10"/>
+                    <TextBlock Text="Только для авторизованных операторов" 
+                             Foreground="#888888"
+                             HorizontalAlignment="Center"
+                             FontSize="12"/>
+                    <TextBlock Text="Версия системы 1.0" 
+                             Foreground="#888888"
+                             HorizontalAlignment="Center"
+                             FontSize="11"
+                             Margin="0,5,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

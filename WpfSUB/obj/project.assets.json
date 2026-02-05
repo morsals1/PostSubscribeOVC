@@ -5033,11 +5033,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mensh\\Desktop\\WpfSUB\\WpfSUB\\WpfSUB.csproj",
+      "projectUniqueName": "C:\\Users\\mensh\\Desktop\\work\\ovc\\PostSubscribeOVC\\WpfSUB\\WpfSUB.csproj",
       "projectName": "WpfSUB",
-      "projectPath": "C:\\Users\\mensh\\Desktop\\WpfSUB\\WpfSUB\\WpfSUB.csproj",
+      "projectPath": "C:\\Users\\mensh\\Desktop\\work\\ovc\\PostSubscribeOVC\\WpfSUB\\WpfSUB.csproj",
       "packagesPath": "C:\\Users\\mensh\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mensh\\Desktop\\WpfSUB\\WpfSUB\\obj\\",
+      "outputPath": "C:\\Users\\mensh\\Desktop\\work\\ovc\\PostSubscribeOVC\\WpfSUB\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

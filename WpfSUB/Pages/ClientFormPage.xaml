@@ -17,31 +17,66 @@
         <ScrollViewer Grid.Row="1">
             <StackPanel>
                 <Label Content="ФИО:"/>
-                <TextBox x:Name="FullNameTextBox" Margin="0,0,0,10"/>
+                <TextBox x:Name="FullNameTextBox" Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}" 
+                         Margin="0,0,0,10"/>
 
                 <Label Content="Адрес:"/>
-                <TextBox x:Name="AddressTextBox" Margin="0,0,0,10"/>
+                <TextBox x:Name="AddressTextBox" Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}" 
+                         Height="60" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,10"/>
 
                 <Label Content="Телефон:"/>
-                <TextBox x:Name="PhoneTextBox" Margin="0,0,0,10"/>
+                <TextBox x:Name="PhoneTextBox" Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" 
+                         Margin="0,0,0,10"/>
 
                 <Label Content="Email:"/>
-                <TextBox x:Name="EmailTextBox" Margin="0,0,0,10"/>
+                <TextBox x:Name="EmailTextBox" Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" 
+                         Margin="0,0,0,10"/>
 
                 <Label Content="Паспортные данные:"/>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                    <TextBox x:Name="PassportSeriesTextBox" Width="60" Text="0000" Margin="0,0,5,0"/>
-                    <TextBox x:Name="PassportNumberTextBox" Width="100" Text="000000"/>
+                    <TextBox x:Name="PassportSeriesTextBox" Width="60" 
+                             Text="{Binding PassportSeries, UpdateSourceTrigger=PropertyChanged}" 
+                             Margin="0,0,5,0"/>
+                    <TextBox x:Name="PassportNumberTextBox" Width="100" 
+                             Text="{Binding PassportNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Content="Сгенерировать" Click="GeneratePassport_Click" 
+                            Margin="10,0,0,0" Width="110"/>
                 </StackPanel>
 
                 <Label Content="Кем выдан:"/>
-                <TextBox x:Name="IssuedByTextBox" Margin="0,0,0,10"/>
+                <TextBox x:Name="IssuedByTextBox" Text="{Binding IssuedBy, UpdateSourceTrigger=PropertyChanged}" 
+                         Margin="0,0,0,10"/>
+
+                <!-- Профиль -->
+                <Border BorderBrush="#E0E0E0" BorderThickness="1" Margin="0,20,0,10" Padding="10">
+                    <StackPanel>
+                        <TextBlock Text="Дополнительная информация (профиль)" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                        <Label Content="Дата рождения:"/>
+                        <DatePicker SelectedDate="{Binding Profile.Birthday}" Margin="0,0,0,10"/>
+
+                        <Label Content="Телефон (профиль):"/>
+                        <TextBox Text="{Binding Profile.Phone, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+
+                        <Label Content="Описание:"/>
+                        <TextBox Text="{Binding Profile.Bio, UpdateSourceTrigger=PropertyChanged}" 
+                                 Height="60" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,10"/>
+
+                        <Label Content="Предпочтения:"/>
+                        <TextBox Text="{Binding Profile.Preferences, UpdateSourceTrigger=PropertyChanged}" 
+                                 Height="40" TextWrapping="Wrap" Margin="0,0,0,10"/>
+
+                        <Button Content="Очистить профиль" Click="ClearProfile_Click" 
+                                HorizontalAlignment="Left" Width="150"/>
+                    </StackPanel>
+                </Border>
             </StackPanel>
         </ScrollViewer>
 
         <!-- Кнопки -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Сохранить" Click="Save_Click" Width="100" Margin="5"/>
+            <Button x:Name="SaveButton" Content="Сохранить" Click="Save_Click" 
+                    Width="100" Margin="5" FontWeight="Bold"/>
             <Button Content="Отмена" Click="Cancel_Click" Width="100" Margin="5"/>
         </StackPanel>
     </Grid>

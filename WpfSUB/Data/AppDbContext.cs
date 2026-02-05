@@ -78,15 +78,6 @@ namespace WpfSUB.Data
                     .WithMany(c => c.Publications)
                     .HasForeignKey(e => e.CategoryId)
                     .OnDelete(DeleteBehavior.Restrict);
-
-                //// Проверки - ИСПРАВЛЕНО!
-                //entity.HasCheckConstraint("CK_Publication_Periodicity",
-                //    "[Periodicity] IN ('ежедневно', 'еженедельно', 'ежемесячно', 'ежеквартально')");
-
-                //entity.HasCheckConstraint("CK_Publication_ISSN",
-                //    "[ISSN] IS NULL OR [ISSN] LIKE '[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]'");
-                //entity.HasCheckConstraint("CK_Publication_MonthlyPrice",
-                //    "[MonthlyPrice] > 0");
             });
 
             // 3. Client
@@ -110,28 +101,14 @@ namespace WpfSUB.Data
                     .HasMaxLength(500);
                 entity.Property(e => e.RegistrationDate)
                     .HasDefaultValueSql("GETDATE()");
-
-                //// Проверки
-                //entity.HasCheckConstraint("CK_Client_FullName",
-                //    "LEN([FullName]) >= 3");
-                //entity.HasCheckConstraint("CK_Client_PassportSeries",
-                //    "[PassportSeries] IS NULL OR [PassportSeries] LIKE '[0-9][0-9][0-9][0-9]'");
-                //entity.HasCheckConstraint("CK_Client_PassportNumber",
-                //    "[PassportNumber] IS NULL OR [PassportNumber] LIKE '[0-9][0-9][0-9][0-9][0-9][0-9]'");
-
-                // Уникальный паспорт
                 entity.HasIndex(e => new { e.PassportSeries, e.PassportNumber })
                     .IsUnique()
                     .HasFilter("[PassportSeries] IS NOT NULL AND [PassportNumber] IS NOT NULL");
             });
-
-            // 4. ClientProfile (1:1 с Client)
-            // 4. ClientProfile (1:1 с Client)
             modelBuilder.Entity<ClientProfile>(entity =>
             {
                 entity.HasKey(e => e.Id);
 
-                // Установите значения по умолчанию для всех NOT NULL полей
                 entity.Property(e => e.AvatarUrl)
                     .HasMaxLength(500)
                     .HasDefaultValue(""); // Значение по умолчанию
@@ -188,17 +165,6 @@ namespace WpfSUB.Data
                     .WithMany(p => p.Subscriptions)
                     .HasForeignKey(e => e.PublicationId)
                     .OnDelete(DeleteBehavior.Restrict);
-
-                //// Проверки - ИСПРАВЛЕНО!
-                //entity.HasCheckConstraint("CK_Subscription_Period",
-                //    "[PeriodMonths] IN (1, 3, 6, 12, 24)"); // Добавил 1 месяц для гибкости
-
-                //entity.HasCheckConstraint("CK_Subscription_TotalPrice",
-                //    "[TotalPrice] > 0");
-                //entity.HasCheckConstraint("CK_Subscription_Status",
-                //    "[Status] IN ('оформлена', 'ожидает_оплаты', 'оплачена', 'активна', 'завершена', 'отменена')");
-                //entity.HasCheckConstraint("CK_Subscription_Payment",
-                //    "([IsFullyPaid] = 1 AND [PaidDate] IS NOT NULL) OR ([IsFullyPaid] = 0 AND [PaidDate] IS NULL)");
             });
 
             // 6. Payment
@@ -234,14 +200,6 @@ namespace WpfSUB.Data
                     .HasForeignKey(e => e.OperatorId)
                     .OnDelete(DeleteBehavior.SetNull);
 
-                // Проверки
-                //entity.HasCheckConstraint("CK_Payment_Amount",
-                //    "[Amount] > 0");
-                //entity.HasCheckConstraint("CK_Payment_Method",
-                //    "[PaymentMethod] IN ('наличные', 'карта_отделение', 'карта_онлайн', 'банковский_перевод')");
-                //entity.HasCheckConstraint("CK_Payment_Status",
-                //    "[PaymentStatus] IN ('ожидает_подтверждения', 'подтвержден', 'отклонен')");
-
                 entity.HasIndex(e => e.ReceiptNumber).IsUnique();
             });
 
@@ -265,10 +223,6 @@ namespace WpfSUB.Data
                     .WithMany(s => s.Deliveries)
                     .HasForeignKey(e => e.SubscriptionId)
                     .OnDelete(DeleteBehavior.Restrict);
-
-                //// Проверки
-                //entity.HasCheckConstraint("CK_Delivery_Status",
-                //    "[DeliveryStatus] IN ('запланирована', 'отправлено', 'в_пути', 'доставлено', 'возврат', 'отменена')");
             });
 
             // 8. AdditionalService

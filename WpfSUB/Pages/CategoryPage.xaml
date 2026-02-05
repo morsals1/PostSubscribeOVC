@@ -6,20 +6,34 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Панель инструментов -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
-            <Button Content="Назад" Click="Back_Click" Margin="5"/>
-            <Button Content="Добавить" Click="Add_Click" Margin="5"/>
-            <Button Content="Редактировать" Click="Edit_Click" Margin="5" x:Name="EditButton"/>
-            <Button Content="Удалить" Click="Delete_Click" Margin="5" x:Name="DeleteButton"/>
-            <Button Content="Обновить" Click="Refresh_Click" Margin="5"/>
+            <Button Content="Назад" Click="Back_Click" Margin="5" Width="80"/>
+            <Button Content="Добавить" Click="Add_Click" Margin="5" Width="80"/>
+            <Button Content="Редактировать" Click="Edit_Click" Margin="5" Width="110" x:Name="EditButton"/>
+            <Button Content="Удалить" Click="Delete_Click" Margin="5" Width="80" x:Name="DeleteButton"/>
+            <Button Content="Обновить" Click="Refresh_Click" Margin="5" Width="80"/>
+            <Button Content="Экспорт" Click="Export_Click" Margin="5" Width="80"/>
         </StackPanel>
 
+        <!-- Поиск -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0,10,10">
+            <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <TextBox x:Name="SearchTextBox" Width="200" TextChanged="SearchTextBox_TextChanged" Margin="0,0,20,0"/>
+        </StackPanel>
+
+        <!-- Статистика -->
+        <Border Grid.Row="2" Background="#F5F5F5" Padding="10" Margin="10,0,10,10">
+            <TextBlock x:Name="StatsTextBlock" Text="" TextWrapping="Wrap"/>
+        </Border>
+
         <!-- Список категорий -->
-        <ListView Grid.Row="1" Margin="10" x:Name="CategoriesListView" SelectionChanged="CategoriesListView_SelectionChanged">
+        <ListView Grid.Row="3" Margin="10" x:Name="CategoriesListView" SelectionChanged="CategoriesListView_SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="50" DisplayMemberBinding="{Binding Id}"/>

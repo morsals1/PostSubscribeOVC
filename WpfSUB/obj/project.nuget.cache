@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "RH8wy94h0Fs=",
+  "dgSpecHash": "RAk9UxDQ9bs=",
   "success": true,
-  "projectFilePath": "C:\\Users\\mensh\\Desktop\\WpfSUB\\WpfSUB\\WpfSUB.csproj",
+  "projectFilePath": "C:\\Users\\mensh\\Desktop\\work\\ovc\\PostSubscribeOVC\\WpfSUB\\WpfSUB.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mensh\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\mensh\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
